@@ -1,0 +1,33 @@
+<html lang="en">
+<head>
+    <title>frame</title>
+</head>
+<body>
+    Hello, from the iframe!
+    <div id="lagRadar"></div>
+    <div>
+        Induce Lag:
+        <input id="lagInput" type="range" min="0" max="1000" value="0">
+        <span id="lagValue">0</span>ms
+    </div>
+    <script type="module">
+        import lagRadar from 'https://mobz.github.io/lag-radar/lag-radar.js';
+
+        const destroy = lagRadar({
+            parent: document.getElementById('lagRadar')
+        });
+
+        (function lagMe() {
+            const lagString = document.getElementById('lagInput').value;
+            const lag = parseInt(lagString, 10);
+            const t1 = Date.now() + lag;
+
+            document.getElementById('lagValue').textContent = lagString;
+
+            while (Date.now() < t1) {}
+
+            window.requestAnimationFrame(lagMe);
+        })();
+    </script>
+</body>
+</html>
