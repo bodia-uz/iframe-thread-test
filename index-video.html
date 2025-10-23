@@ -13,13 +13,13 @@
         />
       </video>
       <br />
-      <button id="playPause">Play / Pause</button>
       <input
         id="videoURL"
         type="text"
         placeholder="Enter new video URL and press Enter"
-        style="witdh: 100%"
+        style="width: 100%;"
       />
+      <button id="playPause">Play / Pause</button>
       <script>
         const video = document.querySelector('video');
         const videoSource = video.querySelector('source');
@@ -37,18 +37,27 @@
             console.warn('Autoplay blocked, user interaction needed');
           });
         }
-          
-        const searchParams = new URLSearchParams(window.location.search);
-        if (searchParams.get('videoUrl').length) {
-          changeVideo(locationSearchParams.get('videoUrl'));
+
+        function changeVideoFromUrlParam() {
+          const searchParams = new URLSearchParams(window.location.search);
+          const videoURL = searchParams.get('videoUrl');
+          if (typeof videoURL === 'string') {
+            changeVideo(videoURL.trim());
+          }
         }
-          
-        videoURLInput.value = videoSource.src;
-        videoURLInput.addEventListener('change', () => {
+        
+        function changeVideoFromInput() {
           const videoURL = videoURLInput.value.trim();
           if (videoURL) {
             changeVideo(videoURL)
           };
+        }
+
+        changeVideoFromUrlParam();
+        
+        videoURLInput.value = videoSource.src;
+        videoURLInput.addEventListener('change', () => {
+          changeVideoFromInput();
         });
       
         videoPlayPauseButton.addEventListener('click', () => {
