@@ -25,19 +25,30 @@
         const videoSource = video.querySelector('source');
         const videoURLInput = document.getElementById('videoURL');
         const videoPlayPauseButton = document.getElementById('playPause');
-      
-        videoURLInput.value = videoSource.src;
-        videoURLInput.addEventListener('change', () => {
-          const videoURL = videoURLInput.value.trim();
-          if (!videoURL) return;
-      
+
+        function changeVideo(videoURL) {
+          videoURLInput.value = videoURL;
+            
           video.pause();
-          videoSource.src = newUrl;
+          videoSource.src = videoURL;
           video.load();
       
           video.play().catch(() => {
             console.warn('Autoplay blocked, user interaction needed');
           });
+        }
+          
+        const searchParams = new URLSearchParams(window.location.search);
+        if (searchParams.get('videoUrl').length) {
+          changeVideo(locationSearchParams.get('videoUrl'));
+        }
+          
+        videoURLInput.value = videoSource.src;
+        videoURLInput.addEventListener('change', () => {
+          const videoURL = videoURLInput.value.trim();
+          if (videoURL) {
+            changeVideo(videoURL)
+          };
         });
       
         videoPlayPauseButton.addEventListener('click', () => {
@@ -56,9 +67,8 @@
 
         lagRadar({ parent: document.getElementById('lagRadar') });
 
-        const locationSearch = new URLSearchParams(window.location.search);
-        const videoUrl = locationSearch.get('videoUrl');  
-        const iframeSrc = locationSearch.get('iframeSrc');
+        const searchParams = new URLSearchParams(window.location.search);
+        const iframeSrc = searchParams.get('iframeSrc');
       
         if (typeof iframeSrc === 'string') {
             const iframe = document.createElement('iframe');
